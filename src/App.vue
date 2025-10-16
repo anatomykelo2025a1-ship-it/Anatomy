@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue' // Import onUnmounted
+import { ref, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import FlashCard from './components/FlashCard.vue'
 import DrawingToolbar from './components/DrawingToolbar.vue'
 import { useCardStore } from './stores/cardStore.js'
@@ -7,7 +7,6 @@ import { useCardStore } from './stores/cardStore.js'
 const store = useCardStore()
 const flashCardComponent = ref(null)
 
-// --- Event Handlers ---
 function handleUndo() {
   flashCardComponent.value?.undo()
 }
@@ -21,12 +20,8 @@ function handleSave() {
   flashCardComponent.value?.saveAsImage()
 }
 
-// --- Keyboard Shortcuts ---
 function handleKeyDown(e) {
-  // Prevent shortcuts when typing in an input
   if (e.target.tagName === 'INPUT') return
-
-  // Ctrl+Z and Ctrl+Y for Undo/Redo
   if (e.ctrlKey && e.key.toLowerCase() === 'z') {
     e.preventDefault()
     handleUndo()
@@ -37,7 +32,6 @@ function handleKeyDown(e) {
     handleRedo()
     return
   }
-
   switch (e.key.toLowerCase()) {
     case 'arrowright':
       if (!store.isAtEnd) store.nextCard()
@@ -60,103 +54,127 @@ function handleKeyDown(e) {
 onMounted(() => {
   store.shuffleCards()
   window.addEventListener('keydown', handleKeyDown)
+  nextTick(() => {
+    if (window.lucide) window.lucide.createIcons()
+  })
 })
 
 onUnmounted(() => {
   window.removeEventListener('keydown', handleKeyDown)
 })
+
+watch(
+  () => store.isDrawingEnabled,
+  () => {
+    nextTick(() => {
+      if (window.lucide) window.lucide.createIcons()
+    })
+  },
+)
 </script>
 
 <template>
-  <header>
-    <h1>Pathology Practical Flash Cards</h1>
-    <p>Card: {{ store.currentIndex + 1 }} / {{ store.cards.length }}</p>
-    <button @click="store.toggleDrawing" class="toggle-draw-btn" title="Enable/Disable Drawing (E)">
-      {{ store.isDrawingEnabled ? 'Disable Drawing' : 'Enable Drawing' }}
-    </button>
-  </header>
+  <div class="app-container">
+    <main class="main-content">
+      <FlashCard ref="flashCardComponent" v-if="store.currentCard" :card-data="store.currentCard" />
+    </main>
 
-  <main>
-    <FlashCard ref="flashCardComponent" v-if="store.currentCard" :card-data="store.currentCard" />
-  </main>
+    <DrawingToolbar @undo="handleUndo" @redo="handleRedo" @clear="handleClear" @save="handleSave" />
 
-  <footer>
-    <!-- Listen for the new 'save' event -->
-    <DrawingToolbar
-      v-if="store.isDrawingEnabled"
-      @undo="handleUndo"
-      @redo="handleRedo"
-      @clear="handleClear"
-      @save="handleSave"
-    />
-
-    <button @click="store.toggleAnswer" class="answer-btn" title="Show/Hide Answer (S)">
-      {{ store.isAnswerVisible ? 'Hide Answer' : 'Show Answer' }}
-    </button>
-
-    <div class="navigation">
-      <button @click="store.previousCard" :disabled="store.isAtStart" title="Previous Card (←)">
-        &larr; Previous
+    <div class="nav-container">
+      <button @click="store.toggleDrawing" class="btn draw-btn" title="Enable/Disable Drawing (E)">
+        <i data-lucide="pencil"></i>
       </button>
-      <button @click="store.nextCard" :disabled="store.isAtEnd" title="Next Card (→)">
-        Next &rarr;
+      <button @click="store.toggleAnswer" class="btn answer-btn" title="Show/Hide Answer (S)">
+        {{ store.isAnswerVisible ? 'Question' : 'Answer' }}
       </button>
     </div>
-  </footer>
+  </div>
 </template>
 
-<style scoped>
-header,
-footer {
-  text-align: center;
-  padding: 1rem;
-  background-color: #1a1a1a;
+<style>
+/* Global styles from your original code */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Segoe+UI:wght@400;600&display=swap');
+body {
+  background: linear-gradient(135deg, #1d2b4a, #0f172a);
   color: #e0e0e0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+  min-height: 100vh;
+  overscroll-behavior: none;
+}
+</style>
+
+<style scoped>
+.app-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 1rem;
+  min-height: 100vh;
+  padding-bottom: 6rem;
 }
-main {
+.main-content {
+  flex-grow: 1;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 1rem;
-  flex-grow: 1;
 }
-.navigation {
+.nav-container {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  z-index: 15;
   display: flex;
   justify-content: center;
   gap: 1rem;
+  padding: 0 1rem;
+  box-sizing: border-box;
 }
-.navigation button,
-.toggle-draw-btn,
-.answer-btn {
+.btn {
   border: none;
   color: #fff;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-size: 1rem;
+  padding: 0.8rem 2.2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 12px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.navigation button:hover:not(:disabled),
-.toggle-draw-btn:hover,
-.answer-btn:hover {
-  background-color: #33a06f;
+.btn:hover:not(:disabled) {
+  transform: translateY(-2px);
 }
 .answer-btn {
-  background-color: #3b82f6;
-  margin-bottom: 1rem;
+  background-color: #22c55e;
+  box-shadow: 0 5px 15px rgba(34, 197, 94, 0.4);
 }
-.answer-btn:hover {
+.answer-btn:hover:not(:disabled) {
+  background-color: #16a34a;
+}
+.draw-btn {
+  background-color: #3b82f6;
+  box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+  padding: 0.8rem;
+}
+.draw-btn:hover:not(:disabled) {
   background-color: #2563eb;
 }
-.navigation button:disabled {
-  background-color: #555;
-  cursor: not-allowed;
-}
-.toggle-draw-btn {
-  background-color: #42b883;
+@media (max-width: 768px) {
+  .main-content {
+    padding: 0.5rem;
+  }
+  .btn {
+    padding: 0.7rem 1.5rem;
+    font-size: 1rem;
+  }
+  .draw-btn {
+    padding: 0.7rem;
+  }
 }
 </style>

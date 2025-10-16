@@ -5,53 +5,45 @@ import { useCardStore } from '../stores/cardStore'
 const props = defineProps({ cardData: Object })
 const store = useCardStore()
 const canvas = ref(null)
-const imageEl = ref(null) // Reference to the img element
+const imageEl = ref(null)
 let ctx = null
 let isDrawing = false
 let startX, startY
 
-// --- NEW: Resize observer to handle canvas resizing ---
+const touchStartX = ref(0)
+function handleTouchStart(e) {
+  if (store.isDrawingEnabled || 'CANVAS' === e.target.tagName) return void (touchStartX.value = 0)
+  touchStartX.value = e.touches[0].clientX
+}
+function handleTouchEnd(e) {
+  if (store.isDrawingEnabled || 0 === touchStartX.value) return
+  const t = e.changedTouches[0].clientX - touchStartX.value
+  ;(t < -50 && store.nextCard(), t > 50 && store.previousCard(), (touchStartX.value = 0))
+}
 let resizeObserver = null
-
 function setupCanvas() {
   if (!canvas.value) return
-  ctx = canvas.value.getContext('2d')
-
-  if (resizeObserver) {
-    resizeObserver.disconnect()
-  }
-
-  resizeObserver = new ResizeObserver((entries) => {
-    for (let entry of entries) {
-      const { width, height } = entry.contentRect
-      canvas.value.width = width
-      canvas.value.height = height
-      redrawCanvas()
-    }
-  })
-
-  resizeObserver.observe(canvas.value)
-  loadHistory()
+  ;((ctx = canvas.value.getContext('2d')),
+    resizeObserver && resizeObserver.disconnect(),
+    (resizeObserver = new ResizeObserver((e) => {
+      for (let t of e) {
+        const { width: o, height: n } = t.contentRect
+        ;((canvas.value.width = o), (canvas.value.height = n), redrawCanvas())
+      }
+    })),
+    resizeObserver.observe(canvas.value),
+    loadHistory())
 }
-
 function getCoords(e) {
-  const rect = canvas.value.getBoundingClientRect()
-  const clientX = e.touches ? e.touches[0].clientX : e.clientX
-  const clientY = e.touches ? e.touches[0].clientY : e.clientY
-
-  const scaleX = canvas.value.width / rect.width
-  const scaleY = canvas.value.height / rect.height
-
-  return {
-    x: (clientX - rect.left) * scaleX,
-    y: (clientY - rect.top) * scaleY,
-  }
+  const t = canvas.value.getBoundingClientRect(),
+    o = e.touches ? e.touches[0].clientX : e.clientX,
+    n = e.touches ? e.touches[0].clientY : e.clientY,
+    a = canvas.value.width / t.width,
+    r = canvas.value.height / t.height
+  return { x: (o - t.left) * a, y: (n - t.top) * r }
 }
-
-// --- Drawing & History Logic ---
-const history = ref([])
-const historyIndex = ref(-1)
-
+const history = ref([]),
+  historyIndex = ref(-1)
 function startDrawing(e) {
   if (!store.isDrawingEnabled) return
   isDrawing = !0
@@ -66,6 +58,7 @@ function draw(e) {
     (ctx.strokeStyle = store.currentColor),
     (ctx.globalCompositeOperation =
       'eraser' === store.currentTool ? 'destination-out' : 'source-over'),
+    (ctx.globalAlpha = 0.3),
     (ctx.globalAlpha = 'highlighter' === store.currentTool ? 0.3 : 1))
   const { x: t, y: o } = getCoords(e)
   ;(ctx.lineTo(t, o), ctx.stroke())
@@ -178,10 +171,15 @@ watch(
 </script>
 
 <template>
-  <div class="card">
+  <div
+    class="card"
+    :class="{ 'answer-mode': store.isAnswerVisible }"
+    ref="cardRef"
+    @touchstart="handleTouchStart"
+    @touchend="handleTouchEnd"
+  >
     <div class="image-container">
       <img ref="imageEl" :src="cardData.image" :alt="cardData.title" crossOrigin="anonymous" />
-      <!-- تمت إضافة :class="{ active: store.isDrawingEnabled }" هنا -->
       <canvas
         ref="canvas"
         :class="{ active: store.isDrawingEnabled }"
@@ -192,140 +190,142 @@ watch(
         @touchstart.prevent="startDrawing"
         @touchmove.prevent="draw"
         @touchend="stopDrawing"
-      >
-      </canvas>
+      ></canvas>
     </div>
-    <div class="question-container">
+
+    <div v-if="!store.isAnswerVisible" class="question-container">
       <ul>
         <li v-for="(q, index) in cardData.question" :key="index" v-html="q"></li>
       </ul>
     </div>
-    <div v-if="store.isAnswerVisible" class="info-container">
-      <h3>{{ cardData.title }}</h3>
-      <ol v-if="Array.isArray(cardData.comment) && cardData.isNumbered">
+
+    <div v-else class="info-container">
+      <h3 class="identify-answer">{{ cardData.title }}</h3>
+      <ol v-if="Array.isArray(cardData.comment) && cardData.isNumbered" class="comment-list">
         <li v-for="(item, index) in cardData.comment" :key="index">{{ item }}</li>
       </ol>
-      <ul v-else-if="Array.isArray(cardData.comment)">
+      <ul v-else-if="Array.isArray(cardData.comment)" class="comment-list">
         <li v-for="(item, index) in cardData.comment" :key="index">{{ item }}</li>
       </ul>
-      <p v-else>{{ cardData.comment }}</p>
+      <p v-else class="comment-list">{{ cardData.comment }}</p>
     </div>
   </div>
 </template>
 
 <style scoped>
 .card {
-  border: 1px solid #444;
-  border-radius: 15px;
-  padding: 0.5rem; /* تم تقليل الإطار الداخلي */
-  margin: 1rem;
-  /* Make width flexible */
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid #3b82f6;
+  border-radius: 18px;
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   width: 100%;
-  max-width: 550px; /* Set a max-width for larger screens */
-  background-color: #1a1a1a;
-  color: #e0e0e0;
+  max-width: 900px;
   display: flex;
   flex-direction: column;
+  transition: border-color 0.3s ease;
+  user-select: none;
+  -webkit-user-select: none;
 }
-
 .image-container {
   position: relative;
-  /* Make the container responsive */
   width: 100%;
   height: auto;
-  aspect-ratio: 500 / 400; /* Maintain aspect ratio */
+  aspect-ratio: 1.5/1;
+  margin-bottom: 1rem; /* Reduced margin */
+  background: #000;
+  border-radius: 12px;
+  overflow: hidden;
 }
-
 .image-container img {
   width: 100%;
   height: 100%;
   object-fit: contain;
   border-radius: 10px;
-  background-color: #000;
+  box-shadow: 0 0 30px 8px rgba(59, 130, 246, 0.5);
+  transition: box-shadow 0.3s ease;
 }
-
 canvas {
   position: absolute;
   top: 0;
   left: 0;
-  /* Make canvas cover the container */
   width: 100%;
   height: 100%;
   pointer-events: none;
 }
-
 canvas.active {
   pointer-events: auto;
   cursor: crosshair;
 }
-
-/* --- Question & Answer Styles --- */
-.question-container {
-  padding: 1rem 0.5rem;
-  border-bottom: 1px solid #444;
-} /* Adjusted padding */
+.card.answer-mode {
+  border-color: #22c55e;
+}
+.card.answer-mode .image-container img {
+  box-shadow: 0 0 30px 8px rgba(34, 197, 94, 0.5);
+}
 .question-container ul {
-  list-style: none;
+  list-style-type: none;
   padding: 0;
   margin: 0;
+  width: 100%;
+  font-size: 1.25rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 1rem;
 }
 .question-container li {
   background: rgba(59, 130, 246, 0.15);
-  border-left: 4px solid #3b82f6;
-  padding: 12px 18px;
-  border-radius: 8px;
-  font-size: 1rem;
-} /* Adjusted font size */
-
+  border-left: 5px solid #3b82f6;
+  padding: 16px 24px;
+  border-radius: 10px;
+}
 .info-container {
-  padding: 1rem 0.5rem 0 0.5rem;
-} /* Adjusted padding */
-h3 {
-  color: #42b883;
-  margin-top: 0;
-  font-size: 1.1rem;
-  text-align: center;
+  margin-top: 1rem; /* Reduced margin */
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 1.5rem;
+}
+.identify-answer {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  color: #bbf7d0;
+  margin-bottom: 1.5rem;
   padding-bottom: 0.75rem;
-  border-bottom: 1px solid #444;
-} /* Adjusted font size */
-p {
-  font-size: 1rem;
+  border-bottom: 2px solid rgba(34, 197, 94, 0.3);
+  text-align: center;
+  width: 100%;
 }
-ul,
-ol {
-  text-align: left;
+.comment-list {
+  font-size: 1.15rem;
+  list-style-type: none;
   padding: 0;
-  list-style: none;
+  margin: 0;
+  width: 100%;
 }
-ol li {
-  background: rgba(34, 197, 94, 0.1);
-  border-left: 4px solid #22c55e;
-  border-radius: 8px;
-  padding: 12px 18px;
-  margin-bottom: 0.75rem;
-  counter-increment: list-counter;
-  display: flex;
-  align-items: flex-start;
+.comment-list li {
+  background: rgba(34, 197, 94, 0.15);
+  border-left: 5px solid #22c55e;
+  padding: 14px 20px;
+  margin-bottom: 1rem;
+  border-radius: 10px;
 }
-ol li::before {
-  content: counter(list-counter) '.';
-  font-weight: 700;
-  color: #a7f3d0;
-  margin-right: 12px;
-  min-width: 20px;
+.comment-list li:last-child {
+  margin-bottom: 0;
 }
-.info-container ul li {
-  padding-left: 1.2em;
-  position: relative;
-}
-.info-container ul li::before {
-  content: '•';
-  position: absolute;
-  left: 0;
-  color: #42b883;
-  font-size: 1.2em;
+@media (max-width: 768px) {
+  .card {
+    padding: 1rem;
+  }
+  .question-container ul {
+    font-size: 1rem;
+  }
+  .question-container li {
+    padding: 12px 16px;
+  }
+  .identify-answer {
+    font-size: 1.5rem;
+  }
+  .comment-list {
+    font-size: 1rem;
+  }
 }
 </style>
