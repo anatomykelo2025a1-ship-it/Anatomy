@@ -2,13 +2,10 @@ export const cards = [
   {
     id: 1,
     image: '/A1.jpg',
-    question: [
-      '<strong>Q1:</strong> Identify the pointed structure and mention its arterial supply?',
-    ],
-    title: 'Fibrous Pericardium - Arterial Supply',
+    question: ['<strong>Q1:</strong> Identify the pointed structure and mention its arterial supply?'],
     comment: [
-      'Structure: fibrous pericardium lined by parietal layer of serous pericardium.',
-      'Arterial supply:',
+      '- Structure: fibrous pericardium lined by parietal layer of serous pericardium.',
+      '- Arterial supply:',
       '1) Pericardiophrenic artery.',
       '2) Descending thoracic aorta (pericardial branches).',
       '3) Internal thoracic artery (pericardial branches).',
@@ -18,10 +15,9 @@ export const cards = [
     id: 2,
     image: '/A1.jpg',
     question: ['<strong>Q2:</strong> Identify the pointed structure and mention its nerve supply?'],
-    title: 'Fibrous Pericardium - Nerve Supply',
     comment: [
-      'Structure: fibrous pericardium.',
-      'Nerve supply:',
+      '- Structure: fibrous pericardium.',
+      '- Nerve supply:',
       '1) Left and right phrenic nerves.',
       '2) Intercostal nerves.',
     ],
@@ -30,10 +26,9 @@ export const cards = [
     id: 3,
     image: '/A2.jpg',
     question: ['<strong>Q3:</strong> Identify the pointed structure and mention its sinuses?'],
-    title: 'Fibrous Pericardium - Sinuses',
     comment: [
-      'Structure: fibrous pericardium.',
-      'Sinuses:',
+      '- Structure: fibrous pericardium.',
+      '- Sinuses:',
       '1) Transverse sinus.',
       '2) Oblique sinus.',
     ],
@@ -42,10 +37,9 @@ export const cards = [
     id: 4,
     image: '/A2.jpg',
     question: ['<strong>Q4:</strong> Identify the pointed structure and mention its ligaments?'],
-    title: 'Fibrous Pericardium - Ligaments',
     comment: [
-      'Structure: fibrous pericardium.',
-      'Ligaments:',
+      '- Structure: fibrous pericardium.',
+      '- Ligaments:',
       '1) Superior and inferior sternopericardial ligaments.',
       '2) Pericardiophrenic ligament.',
     ],
@@ -54,9 +48,8 @@ export const cards = [
     id: 5,
     image: '/A3.jpg',
     question: ['<strong>Q5:</strong> Identify the numbering areas?'],
-    title: 'Heart Anterior View (1-7)',
     comment: [
-      'Opened pericardium showing the anterior surface of the heart and great vessels:',
+      '- Opened pericardium showing the anterior surface of the heart and great vessels:',
       '1) Fibrous pericardium.',
       '2) Right ventricle.',
       '3) Pulmonary trunk.',
@@ -70,9 +63,8 @@ export const cards = [
     id: 6,
     image: '/A4.jpg',
     question: ['<strong>Q5:</strong> Identify the numbering areas?'],
-    title: 'Heart Anterior View (8-12)',
     comment: [
-      'Opened pericardium showing the anterior surface of the heart and great vessels:',
+      '- Opened pericardium showing the anterior surface of the heart and great vessels:',
       '8) Inferior vena cava (IVC).',
       '9) Pulmonary trunk and valve.',
       '10) Ascending aorta and valve.',
@@ -84,21 +76,22 @@ export const cards = [
     id: 7,
     image: '/A5.jpg',
     question: ['<strong>Q6:</strong> Identify the area related to the white arrow?'],
-    title: 'Pericardial Sinuses - Transverse',
-    comment: 'White arrow: Transverse sinus of serous pericardium.',
+    comment: [
+        '- White arrow: Transverse sinus of serous pericardium.'
+    ],
   },
   {
     id: 8,
     image: '/A5.jpg',
     question: ['<strong>Q7:</strong> Identify the area related to the yellow arrow?'],
-    title: 'Pericardial Sinuses - Oblique',
-    comment: 'Yellow arrow: Oblique sinus of serous pericardium.',
+    comment: [
+        '- Yellow arrow: Oblique sinus of serous pericardium.'
+    ],
   },
   {
     id: 9,
     image: '/A5.jpg',
     question: ['<strong>Q8:</strong> Identify the numbering areas??'],
-    title: 'Heart Structures and Vessels',
     comment: [
       '1) IVC.',
       '2) Right pulmonary veins.',
@@ -116,7 +109,6 @@ export const cards = [
     id: 10,
     image: '/A6.jpg',
     question: ['<strong>Q9:</strong> Identify the pointed numbers?'],
-    title: 'Heart Chambers and Vessels (A6)',
     comment: [
       '1) Right atrium.',
       '2) Right ventricle.',
@@ -131,7 +123,6 @@ export const cards = [
     id: 11,
     image: '/A7.jpg',
     question: ['<strong>Q9:</strong> Identify the pointed numbers?'],
-    title: 'Heart Chambers and Coronary Sulcus (A7)',
     comment: [
       '8. Left atrium',
       '9. Left ventricle',
@@ -142,7 +133,6 @@ export const cards = [
     id: 12,
     image: '/A8.jpg',
     question: ['<strong>Q10:</strong> Identify the pointed structures?'],
-    title: 'Coronary Arteries and Aorta',
     comment: [
       'A. Right coronary artery',
       'B. Left coronary giving circumflex branch',
@@ -154,7 +144,6 @@ export const cards = [
     id: 13,
     image: '/A10.jpg',
     question: ['<strong>Q12:</strong> Identify the pointed structures?'],
-    title: 'Heart Coronal Section (Chambers)',
     comment: [
       'A. Left ventricle',
       'B. Trabeculae carneae and papillary muscles',
@@ -166,7 +155,6 @@ export const cards = [
     id: 14,
     image: '/A11.jpg',
     question: ['<strong>Q13:</strong> Identify the numbering areas?'],
-    title: 'Heart Coronal Section (Overview)',
     comment: [
       'Coronal plane section of heart',
       '1. Apex of heart',
@@ -185,7 +173,6 @@ export const cards = [
     id: 15,
     image: '/A12.jpg',
     question: ['<strong>Q14:</strong> Identify the pointed structures?'],
-    title: 'Heart Valves and Coronaries',
     comment: [
       '1. Tricuspid valve',
       '2. Right coronary artery',
@@ -199,45 +186,39 @@ export const cards = [
     id: 16,
     image: '/A13.jpg',
     question: ['<strong>Q15:</strong> Identify the cardiac anomales?'],
-    title: 'Cardiac Anomalies (A13)',
     comment: ['<!-- TODO: أضف الإجابة هنا -->'],
   },
   {
     id: 17,
     image: '/A14.jpg',
     question: ['<strong>Q16:</strong> Identify the cardiac anomales?'],
-    title: 'Cardiac Anomalies (A14)',
     comment: ['<!-- TODO: أضف الإجابة هنا -->'],
   },
   {
     id: 18,
     image: '/A15.jpg',
     question: ['<strong>Q16:</strong> Identify the cardiac anomales?'],
-    title: 'Cardiac Anomalies (A15 Alt)',
     comment: ['<!-- TODO: أضف الإجابة هنا -->'],
   },
   {
     id: 19,
     image: '/A16.jpg',
     question: ['<strong>Q17:</strong> Identify the cardiac anomales?'],
-    title: 'Cardiac Anomalies (A16)',
     comment: ['<!-- TODO: أضف الإجابة هنا -->'],
   },
   {
     id: 20,
     image: '/A17.jpg',
     question: ['<strong>Q18:</strong> Identify the cardiac anomales?'],
-    title: 'Cardiac Anomalies (A17)',
     comment: ['<!-- TODO: أضف الإجابة هنا -->'],
   },
   {
     id: 21,
     image: '/A18.jpg',
     question: ['<strong>Q19:</strong> Identify the pointed structure and mention two branches?'],
-    title: 'Arch of Aorta - Branches',
     comment: [
-      'Structure: Arch of aorta.',
-      'Branches:',
+      '- Structure: Arch of aorta.',
+      '- Branches:',
       '1) Brachiocephalic artery.',
       '2) Left common carotid artery.',
       '3) Left subclavian artery.',
@@ -246,21 +227,18 @@ export const cards = [
   {
     id: 22,
     image: '/A18.jpg',
-    question: [
-      '<strong>Q20:</strong> Identify the pointed structure and mention the level of its termination?',
+    question: ['<strong>Q20:</strong> Identify the pointed structure and mention the level of its termination?'],
+    comment: [
+        '- Structure: Arch of aorta.<br>- Termination: at the lower border of the body of thoracic vertebra T4.'
     ],
-    title: 'Arch of Aorta - Termination',
-    comment:
-      'Structure: Arch of aorta. Termination: at the lower border of the body of thoracic vertebra T4.',
   },
   {
     id: 23,
     image: '/A19.jpg',
     question: ['<strong>Q21:</strong> Identify the pointed structure and mention two tributaries?'],
-    title: 'Left Brachiocephalic Vein - Tributaries',
     comment: [
-      'Structure: Left brachiocephalic vein.',
-      'Tributaries:',
+      '- Structure: Left brachiocephalic vein.',
+      '- Tributaries:',
       '1) Left internal jugular vein.',
       '2) Left subclavian vein.',
     ],
@@ -269,15 +247,14 @@ export const cards = [
     id: 24,
     image: '/A19.jpg',
     question: ['<strong>Q22:</strong> Identify the pointed structure and mention its termination?'],
-    title: 'Left Brachiocephalic Vein - Termination',
-    comment:
-      'Structure: Left brachiocephalic vein. Termination: unites with right brachiocephalic vein at the level of right 1st costal cartilage to form the SVC.',
+    comment: [
+        '- Structure: Left brachiocephalic vein.<br>- Termination: unites with right brachiocephalic vein at the level of right 1st costal cartilage to form the SVC.'
+    ],
   },
   {
     id: 25,
     image: '/A20.jpg',
     question: ['<strong>Q23:</strong> Identify the numbering areas?'],
-    title: 'Abdominal Aorta and Branches',
     comment: [
       '1. Celiac trunk',
       '2. Common hepatic artery',
@@ -294,10 +271,7 @@ export const cards = [
   {
     id: 26,
     image: '/A25.jpg',
-    question: [
-      '<strong>Q31:</strong> Identify the pointed structure (1) and mention two branches?',
-    ],
-    title: 'Right Common Carotid Artery',
+    question: ['<strong>Q31:</strong> Identify the pointed structure (1) and mention two branches?'],
     comment: [
       'Right common carotid artery',
       '1. External carotid artery',
@@ -307,10 +281,7 @@ export const cards = [
   {
     id: 27,
     image: '/A25.jpg',
-    question: [
-      '<strong>Q32:</strong> Identify the pointed structure (2) and mention the level of its beginning?',
-    ],
-    title: 'Internal Carotid Artery',
+    question: ['<strong>Q32:</strong> Identify the pointed structure (2) and mention the level of its beginning?'],
     comment: [
       'Internal carotid artery',
       'at the upper border of the thyroid cartilage, at the level of the 4th cervical vertebra (C4), as a terminal branch of the common carotid artery.',
@@ -319,10 +290,7 @@ export const cards = [
   {
     id: 28,
     image: '/A25.jpg',
-    question: [
-      '<strong>Q33:</strong> Identify the pointed structure (3) and mention two branches?',
-    ],
-    title: 'External Carotid Artery',
+    question: ['<strong>Q33:</strong> Identify the pointed structure (3) and mention two branches?'],
     comment: [
       'External carotid artery',
       '1. Superior thyroid artery',
@@ -332,4 +300,4 @@ export const cards = [
       '5. Fascial artery',
     ],
   },
-]
+];
