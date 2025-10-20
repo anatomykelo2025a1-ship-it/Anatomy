@@ -17,7 +17,7 @@ let resizeObserver=null;function setupCanvas(){if(!canvas.value)return;ctx=canva
 function getCoords(e){const t=canvas.value.getBoundingClientRect(),o=e.touches?e.touches[0].clientX:e.clientX,n=e.touches?e.touches[0].clientY:e.clientY,a=canvas.value.width/t.width,r=canvas.value.height/t.height;return{x:(o-t.left)*a,y:(n-t.top)*r}}
 const history=ref([]),historyIndex=ref(-1);
 function startDrawing(e){if(!store.isDrawingEnabled)return;isDrawing=!0;const{x:t,y:o}=getCoords(e);startX=t,startY=o,ctx.beginPath(),ctx.moveTo(t,o)}
-function draw(e){if(!isDrawing||!store.isDrawingEnabled||"arrow"===store.currentTool)return;ctx.lineCap="round",ctx.lineJoin="round",ctx.lineWidth=store.lineWidth,ctx.strokeStyle=store.currentColor,ctx.globalCompositeOperation="eraser"===store.currentTool?"destination-out":"source-over",ctx.globalAlpha=.3,ctx.globalAlpha="highlighter"===store.currentTool?.3:1;const{x:t,y:o}=getCoords(e);ctx.lineTo(t,o),ctx.stroke()}
+function draw(e){if(!isDrawing||!store.isDrawingEnabled||"arrow"===store.currentTool)return;ctx.lineCap="round",ctx.lineJoin="round",ctx.lineWidth=store.lineWidth,ctx.strokeStyle=store.currentColor,ctx.globalCompositeOperation="eraser"===store.currentTool?"destination-out":"source-over",ctx.globalAlpha="highlighter"===store.currentTool?.3:1;const{x:t,y:o}=getCoords(e);ctx.lineTo(t,o),ctx.stroke()}
 function stopDrawing(e){if(!isDrawing)return;isDrawing=!1,"arrow"===store.currentTool&&drawArrow(startX,startY,getCoords(e.changedTouches?e.changedTouches[0]:e).x,getCoords(e.changedTouches?e.changedTouches[0]:e).y),pushStateToHistory()}
 function drawArrow(e,t,o,n){ctx.lineCap="round",ctx.lineJoin="round",ctx.lineWidth=store.lineWidth,ctx.strokeStyle=store.currentColor,ctx.globalCompositeOperation="source-over",ctx.globalAlpha=1;const a=10+.5*ctx.lineWidth,r=o-e,i=n-t;if(Math.hypot(r,i)<5)return;const s=Math.atan2(i,r);ctx.moveTo(e,t),ctx.lineTo(o,n),ctx.lineTo(o-a*Math.cos(s-Math.PI/6),n-a*Math.sin(s-Math.PI/6)),ctx.moveTo(o,n),ctx.lineTo(o-a*Math.cos(s+Math.PI/6),n-a*Math.sin(s+Math.PI/6)),ctx.stroke()}
 const STORAGE_PREFIX="drawing_history_";
@@ -64,11 +64,6 @@ watch(()=>props.cardData,()=>{if(ctx){loadHistory()}});
 </template>
 
 <style scoped>
-/* التعديل:
-  1. أضفنا خاصية 'gap' للتحكم في المسافة بين العناصر داخل البطاقة.
-  2. حذفنا 'margin-bottom' من حاوية الصورة.
-  3. حذفنا 'margin-top' من حاوية الإجابة.
-*/
 .card {
   background: rgba(255, 255, 255, .05);
   border: 1px solid #3b82f6;
@@ -79,7 +74,7 @@ watch(()=>props.cardData,()=>{if(ctx){loadHistory()}});
   max-width: 900px;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem; /* <-- هذا هو التعديل الرئيسي للتحكم في المسافة */
+  gap: 0.75rem;
   transition: border-color .3s ease;
   user-select: none;
   -webkit-user-select: none;
@@ -90,7 +85,6 @@ watch(()=>props.cardData,()=>{if(ctx){loadHistory()}});
   width: 100%;
   height: auto;
   aspect-ratio: 1.5 / 1;
-  /* margin-bottom تم حذفه من هنا */
   background: #000;
   border-radius: 12px;
   overflow: hidden;
@@ -146,9 +140,8 @@ canvas.active {
 }
 
 .info-container {
-  /* margin-top تم حذفه من هنا */
   border-top: 1px solid rgba(255, 255, 255, .1);
-  padding-top: 1rem; /* تم تقليل الحشوة العلوية قليلاً أيضاً */
+  padding-top: 1rem;
 }
 
 .identify-answer {
@@ -200,3 +193,4 @@ canvas.active {
   }
 }
 </style>
+
