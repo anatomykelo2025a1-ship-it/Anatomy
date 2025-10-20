@@ -74,12 +74,11 @@ watch(()=>props.cardData,()=>{if(ctx){loadHistory()}});
   max-width: 900px;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.5rem; /* <-- التعديل الأول: تقليل المسافة الرئيسية */
   transition: border-color .3s ease;
   user-select: none;
   -webkit-user-select: none;
 }
-
 .image-container {
   position: relative;
   width: 100%;
@@ -89,7 +88,6 @@ watch(()=>props.cardData,()=>{if(ctx){loadHistory()}});
   border-radius: 12px;
   overflow: hidden;
 }
-
 .image-container img {
   width: 100%;
   height: 100%;
@@ -98,7 +96,6 @@ watch(()=>props.cardData,()=>{if(ctx){loadHistory()}});
   box-shadow: 0 0 30px 8px rgba(59, 130, 246, .5);
   transition: box-shadow .3s ease;
 }
-
 canvas {
   position: absolute;
   top: 0;
@@ -107,20 +104,16 @@ canvas {
   height: 100%;
   pointer-events: none;
 }
-
 canvas.active {
   pointer-events: auto;
   cursor: crosshair;
 }
-
 .card.answer-mode {
   border-color: #22c55e;
 }
-
 .card.answer-mode .image-container img {
   box-shadow: 0 0 30px 8px rgba(34, 197, 94, .5);
 }
-
 .question-container ul {
   list-style-type: none;
   padding: 0;
@@ -131,30 +124,26 @@ canvas.active {
   flex-direction: column;
   gap: 1rem;
 }
-
 .question-container li {
   background: rgba(59, 130, 246, .15);
   border-left: 5px solid #3b82f6;
   padding: 16px 24px;
   border-radius: 10px;
 }
-
 .info-container {
-  border-top: 1px solid rgba(255, 255, 255, .1);
-  padding-top: 1rem;
+  /* <-- التعديل الثاني: تم حذف الخط الفاصل (border-top) */
+  padding-top: 0.5rem; /* <-- التعديل الثالث: تقليل المسافة العلوية */
 }
-
 .identify-answer {
   font-family: 'Playfair Display', serif;
   font-size: 1.8rem;
   color: #bbf7d0;
-  margin-bottom: 1.5rem;
-  padding-bottom: .75rem;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.5rem;
   border-bottom: 2px solid rgba(34, 197, 94, .3);
   text-align: center;
   width: 100%;
 }
-
 .comment-list {
   font-size: 1.15rem;
   list-style-type: none;
@@ -162,7 +151,6 @@ canvas.active {
   margin: 0;
   width: 100%;
 }
-
 .comment-list li {
   background: rgba(34, 197, 94, .15);
   border-left: 5px solid #22c55e;
@@ -170,27 +158,15 @@ canvas.active {
   margin-bottom: 1rem;
   border-radius: 10px;
 }
-
 .comment-list li:last-child {
   margin-bottom: 0;
 }
-
 @media(max-width: 768px) {
-  .card {
-    padding: 1rem;
-  }
-  .question-container ul {
-    font-size: 1rem;
-  }
-  .question-container li {
-    padding: 12px 16px;
-  }
-  .identify-answer {
-    font-size: 1.5rem;
-  }
-  .comment-list {
-    font-size: 1rem;
-  }
+  .card { padding: 1rem; }
+  .question-container ul { font-size: 1rem; }
+  .question-container li { padding: 12px 16px; }
+  .identify-answer { font-size: 1.5rem; }
+  .comment-list { font-size: 1rem; }
 }
 </style>
 
