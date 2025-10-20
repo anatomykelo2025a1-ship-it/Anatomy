@@ -1,4 +1,3 @@
-
 <script setup>
 import { ref, onMounted, onUnmounted, nextTick, watch } from 'vue';
 import FlashCard from './components/FlashCard.vue';
@@ -6,17 +5,32 @@ import DrawingToolbar from './components/DrawingToolbar.vue';
 import { useCardStore } from './stores/cardStore.js';
 
 const store = useCardStore();
+// --- START: التعديل الرئيسي ---
+// 1. أنشأنا مرجع (reference) للوصول إلى مكون البطاقة مباشرة
 const flashCardComponent = ref(null);
 
-function handleUndo() { flashCardComponent.value?.undo(); }
-function handleRedo() { flashCardComponent.value?.redo(); }
-function handleClear() { flashCardComponent.value?.clearDrawing(); }
-function handleSave() { flashCardComponent.value?.saveAsImage(); }
+// 2. أنشأنا دوال لاستقبال الأوامر من شريط الأدوات
+//    وتمريرها إلى الدوال الموجودة داخل مكون البطاقة
+function handleUndo() {
+  flashCardComponent.value?.undo();
+}
+function handleRedo() {
+  flashCardComponent.value?.redo();
+}
+function handleClear() {
+  flashCardComponent.value?.clearDrawing();
+}
+function handleSave() {
+  flashCardComponent.value?.saveAsImage();
+}
+// --- END: التعديل الرئيسي ---
 
 function handleKeyDown(e) {
   if (e.target.tagName === 'INPUT') return;
+  // أضفنا استدعاء الدوال الجديدة هنا أيضاً لاختصارات لوحة المفاتيح
   if (e.ctrlKey && e.key.toLowerCase() === 'z') { e.preventDefault(); handleUndo(); return; }
   if (e.ctrlKey && e.key.toLowerCase() === 'y') { e.preventDefault(); handleRedo(); return; }
+  
   switch (e.key.toLowerCase()) {
     case 'arrowright': if (!store.isAtEnd) store.nextCard(); break;
     case 'arrowleft': if (!store.isAtStart) store.previousCard(); break;
@@ -48,18 +62,20 @@ watch(() => store.isDrawingEnabled, () => {
 <template>
   <div class="app-container">
     <main class="main-content">
+      <!-- 3. ربطنا المرجع بالمكون هنا باستخدام 'ref' -->
       <FlashCard ref="flashCardComponent" v-if="store.currentCard" :card-data="store.currentCard" />
     </main>
 
+    <!-- 4. أضفنا مستمعي الأحداث هنا لاستقبال الأوامر من شريط الأدوات -->
     <DrawingToolbar @undo="handleUndo" @redo="handleRedo" @clear="handleClear" @save="handleSave" />
 
     <div class="nav-container">
-       <button @click="store.toggleDrawing" class="btn draw-btn" title="Enable/Disable Drawing (E)">
-        <i data-lucide="pencil"></i>
-      </button>
-      <button @click="store.toggleAnswer" class="btn answer-btn" title="Show/Hide Answer (S)">
-        {{ store.isAnswerVisible ? 'Question' : 'Answer' }}
-      </button>
+        <button @click="store.toggleDrawing" class="btn draw-btn" title="Enable/Disable Drawing (E)">
+          <i data-lucide="pencil"></i>
+        </button>
+        <button @click="store.toggleAnswer" class="btn answer-btn" title="Show/Hide Answer (S)">
+          {{ store.isAnswerVisible ? 'Question' : 'Answer' }}
+        </button>
     </div>
   </div>
 </template>
